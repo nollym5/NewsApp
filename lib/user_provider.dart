@@ -1,11 +1,14 @@
 import 'package:device_info/device_info.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:industry_app/constants.dart';
 
+
 class UserProvider with ChangeNotifier {
+
 
 
   Future<dynamic> registerUser(String email, String name, String dateOfBirth,
@@ -29,7 +32,6 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<List<dynamic>> getUserRoles() async {
-
     http.Response response =
         await http.get('${kApiUrl}register/get-user-roles');
 
@@ -38,34 +40,53 @@ class UserProvider with ChangeNotifier {
     return jsonData;
   }
 
-  Future<String> verifyOTP(String email,String otp)async{
-
+  Future<String> verifyOTP(String email, String otp) async {
     Map<String, String> body = {
       'email': email,
       'activation_code': otp,
     };
-    http.Response response= await http.post('${kApiUrl}register/verify-otp',headers: kPostHeaders,body: body);
+    http.Response response = await http.post('${kApiUrl}register/verify-otp',
+        headers: kPostHeaders, body: body);
     var jsonData = jsonDecode(response.body);
     return jsonData;
   }
-  Future<String> getRoleDesc(String id)async{
 
-    Map<String, String> body = {
-      'id': id
-    };
-    http.Response response= await http.post('${kApiUrl}register/get-role-description',headers: kPostHeaders,body: body);
+  Future<String> getRoleDesc(String id) async {
+    Map<String, String> body = {'id': id};
+    http.Response response = await http.post(
+        '${kApiUrl}register/get-role-description',
+        headers: kPostHeaders,
+        body: body);
     var jsonData = jsonDecode(response.body);
     return jsonData;
   }
-  List news;
 
-  Future<List> fetchNews()async{
-    http.Response newsResponse = await http.get("http://newsapi.org/v2/top-headlines?country=za&apiKey=e7b29f072a6741c9b9e5791703d92628");
-    if(newsResponse.statusCode == 200)
-      {
-        news =jsonDecode(newsResponse.body)['articles'];
+  Future<dynamic> fetchNews() async {
+    http.Response newsResponse = await http.get(
+        "http://newsapi.org/v2/top-headlines?country=za&apiKey=55c03c15c0e540e2955e417e8edf5e67");
 
-        return news;
-      }
+    if (newsResponse.statusCode == 200) {
+      var newsJson = jsonDecode(newsResponse.body)['articles'];
+
+      return newsJson;
+
+    } else {
+      print('error');
+
+    }
   }
+  Future<dynamic> deactivateAccount(String imei) async {
+    Map<String, String> body = {'device_imei': imei};
+
+    http.Response newsResponse = await http.post(
+        '${kApiUrl}register/deactivate-account',
+        headers: kPostHeaders,
+        body: body);
+
+    var deactivateJson = jsonDecode(newsResponse.body);
+
+    return deactivateJson;
+
+  }
+
 }

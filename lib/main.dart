@@ -57,6 +57,7 @@ class _AppState extends State<App> {
     return FutureBuilder(
       future: deviceData,
       builder: (context, snapshot) {
+//print(snapshot.data);
         if (snapshot.hasData) {
           return MaterialApp(
             title: 'Industry App',
@@ -71,26 +72,34 @@ class _AppState extends State<App> {
             ),
             debugShowCheckedModeBanner: false,
             initialRoute: snapshot.data.active == 1
-                ? DashboardScreen.routeName : snapshot.data.active == 0?
-                 OTPScreen.routeName: SplashScreen.routeName,
+                ? DashboardScreen.routeName
+                : snapshot.data.active == 0
+                    ? OTPScreen.routeName
+                    : SplashScreen.routeName,
             routes: routes,
           );
         } else {
-          return MaterialApp(
-            title: 'Industry App',
-            theme: ThemeData(
-              scaffoldBackgroundColor: Colors.white,
-              primaryColor: kAppGreenColour,
-              fontFamily: "Muli",
-              appBarTheme: appBarTheme(),
-              textTheme: textTheme(),
-              inputDecorationTheme: inputDecorationTheme(),
-              visualDensity: VisualDensity.adaptivePlatformDensity,
-            ),
-            debugShowCheckedModeBanner: false,
-            initialRoute: SplashScreen.routeName,
-            routes: routes,
-          );
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.data == null) {
+
+            return MaterialApp(
+              title: 'Industry App',
+              theme: ThemeData(
+                scaffoldBackgroundColor: Colors.white,
+                primaryColor: kAppGreenColour,
+                fontFamily: "Muli",
+                appBarTheme: appBarTheme(),
+                textTheme: textTheme(),
+                inputDecorationTheme: inputDecorationTheme(),
+                visualDensity: VisualDensity.adaptivePlatformDensity,
+              ),
+              debugShowCheckedModeBanner: false,
+              initialRoute: SplashScreen.routeName,
+              routes: routes,
+            );
+          } else {
+            return progressIndicator();
+          }
         }
       },
     );

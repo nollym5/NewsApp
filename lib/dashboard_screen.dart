@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:industry_app/constants.dart';
 import 'package:industry_app/device_data_provider.dart';
 import 'package:industry_app/news.dart';
+import 'package:industry_app/splash_screen.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:industry_app/task_column.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
@@ -14,6 +16,7 @@ import 'package:provider/provider.dart';
 class DashboardScreen extends StatefulWidget {
   static String routeName = "/dashboard";
 
+
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
@@ -21,6 +24,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   Future<DeviceData> deviceData;
   final GlobalKey _globalKey = GlobalKey();
+  var result;
 
   @override
   void didChangeDependencies() {
@@ -83,17 +87,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var userData = Provider.of<UserProvider>(context);
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _globalKey,
       drawer: Drawer(
-        child: ListView(
-          children: [
-            FutureBuilder(
-                future: deviceData,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return UserAccountsDrawerHeader(
+        child: FutureBuilder(
+            future: deviceData,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView(
+                  children: [
+                    UserAccountsDrawerHeader(
                       accountName: Text(snapshot.data.name),
                       accountEmail: Text(snapshot.data.email),
                       currentAccountPicture: CircleAvatar(
@@ -106,64 +111,82 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                       ),
-                    );
-                  } else {
-                    return Center(
-                      child: Container(
-                        child: CircularProgressIndicator(
-                          backgroundColor: kAppGreenColour,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                    ListTile(
+                      title: Text("Statistics"),
+                      leading: Icon(
+                        Icons.stacked_bar_chart,
+                        color: Colors.green[600],
+                      ),
+                    ),
+                    ListTile(
+                      title: Text("News"),
+                      leading: Icon(
+                        Icons.description,
+                        color: Colors.green[600],
+                      ),
+                      onTap: () {
+                        Navigator.pushReplacementNamed(context, News.routeName);
+                      },
+                    ),
+                    ListTile(
+                      title: Text("Publish News"),
+                      leading: Icon(
+                        Icons.add,
+                        color: Colors.green[600],
+                      ),
+                    ),
+                    ListTile(
+                      title: Text("Edit Profile"),
+                      leading: Icon(
+                        Icons.settings,
+                        color: Colors.green[600],
+                      ),
+                    ),
+                    ListTile(
+                      onTap: () {
+                        androidAlertDialog(
+                            context, "Are you sure you want to deactivate",
+                            titleText: "Deactivate", onYesPressed: () {
+                              print(snapshot.data.deviceNumber);
+                          result = userData
+                              .deactivateAccount(snapshot.data.deviceNumber);
+                          if (result!='success'){
+                          Navigator.pushReplacementNamed(
+                              context, SplashScreen.routeName);
+
+                          Fluttertoast.showToast(
+                              msg: "Your deactivation was successful!",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: kAppGreyColour,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                          }
+
+                        }, onNoPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, DashboardScreen.routeName);
+                        });
+                      },
+                      title: Text(
+                        "Deactivate Account",
+                        style: TextStyle(
+                          color: Colors.red[600],
                         ),
                       ),
-                    );
-                  }
-                }),
-            ListTile(
-              title: Text("Statistics"),
-              leading: Icon(
-                Icons.stacked_bar_chart,
-                color: Colors.green[600],
-              ),
-            ),
-            ListTile(
-              title: Text("News"),
-              leading: Icon(
-                Icons.description,
-                color: Colors.green[600],
-              ),
-              onTap: () {
-                Navigator.pushReplacementNamed(context, News.routeName);
-              },
-            ),
-            ListTile(
-              title: Text("Publish News"),
-              leading: Icon(
-                Icons.add,
-                color: Colors.green[600],
-              ),
-            ),
-            ListTile(
-              title: Text("Edit Profile"),
-              leading: Icon(
-                Icons.settings,
-                color: Colors.green[600],
-              ),
-            ),
-            ListTile(
-              title: Text(
-                "Deactivate Account",
-                style: TextStyle(
-                  color: Colors.red[600],
-                ),
-              ),
-              leading: Icon(
-                Icons.power_settings_new,
-                color: Colors.red[600],
-              ),
-            ),
-          ],
-        ),
+                      leading: Icon(
+                        Icons.power_settings_new,
+                        color: Colors.red[600],
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                return progressIndicator();
+              }
+            }),
       ),
       appBar: AppBar(
         elevation: 0.0,
@@ -228,7 +251,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       snapshot.data.name,
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
-                                        fontSize: 28.0,
+                                        fontSize: MediaQuery.of(context).size.width * 0.05,
                                         color: Colors.white,
                                         fontWeight: FontWeight.w800,
                                       ),

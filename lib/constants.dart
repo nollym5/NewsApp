@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:rich_alert/rich_alert.dart';
 const kApiUrl = 'http://api.freshmark/';
 const Map<String, String> kPostHeaders = {"Accept": "application/json"};
 
@@ -112,12 +112,66 @@ TargetPlatform getDevicePlatform(BuildContext context) {
 }
 
 Widget progressIndicator(){
-  return Center(
-    child: Container(
+  return Container(
+    color: Colors.white,
+    child: Center(
       child: CircularProgressIndicator(
         backgroundColor: kAppGreenColour,
         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
       ),
     ),
+  );
+}
+
+void androidAlertDialog(
+    BuildContext context, String bodyText,
+    {String titleText, onYesPressed(),onNoPressed()}) {
+  showDialog(
+    useSafeArea: true,
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: titleText != null ? Text(titleText) : Text(''),
+        content: Text(bodyText),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: onYesPressed,
+            child: Container(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                "Yes",
+                style: TextStyle(
+                  fontFamily: 'Muli',
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            color: kAppGreenColour,
+            /*shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),*/
+          ),
+          FlatButton(
+            onPressed: onNoPressed,
+            child: Container(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                "No",
+                style: TextStyle(
+                  fontFamily: 'Muli',
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            color: kAppGreenColour,
+            /*shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),*/
+          ),
+        ],
+      );
+    },
   );
 }
