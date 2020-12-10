@@ -75,26 +75,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
           padding: const EdgeInsets.all(10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Center(
-                child: Stack(children: [
-                  Container(
-                    alignment: Alignment.center,
-                    child: Image.network(
-                        'https://image.shutterstock.com/image-photo/red-apple-isolate-on-white-600w-1714353358.jpg'),
-                  ),
-                  Container(
-                    height: 40,
-                    alignment: Alignment.bottomRight,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.grey),
-                    child: Text(
-                      'NM',
-                      style: TextStyle(color: Colors.white),
-                    ),
+              Stack(
+                alignment: Alignment.bottomRight,
+                children: [
+                  Image.network(
+                      'https://image.shutterstock.com/image-photo/red-apple-isolate-on-white-600w-1714353358.jpg'),
+                  Text(
+                    'NM',
+                    style: TextStyle(
+                        color: Colors.white, backgroundColor: Colors.grey,background: ),
                   )
-                ]),
+                ],
               ),
             ],
           ),
