@@ -3,9 +3,11 @@ import 'package:industry_app/agent_provider.dart';
 import 'package:industry_app/buyers_provider.dart';
 import 'package:industry_app/dashboard_screen.dart';
 import 'package:industry_app/device_data_provider.dart';
+import 'package:industry_app/login_screen.dart';
 import 'package:industry_app/market_provider.dart';
 import 'package:industry_app/otp_screen.dart';
 import 'package:industry_app/producers_provider.dart';
+import 'package:industry_app/register.dart';
 import 'package:industry_app/splash_screen.dart';
 import 'package:industry_app/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -55,10 +57,10 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: deviceData,
-      builder: (context, snapshot) {
+        future: deviceData,
+        builder: (context, snapshot) {
 //print(snapshot.data);
-        if (snapshot.hasData) {
+          /* if (snapshot.hasData) {
           return MaterialApp(
             title: 'Industry App',
             theme: ThemeData(
@@ -72,36 +74,33 @@ class _AppState extends State<App> {
             ),
             debugShowCheckedModeBanner: false,
             initialRoute: snapshot.data.active == 1
-                ? DashboardScreen.routeName
+                ? Register.routeName
                 : snapshot.data.active == 0
                     ? OTPScreen.routeName
                     : SplashScreen.routeName,
             routes: routes,
+          );*/
+          // } else {
+          // if (snapshot.connectionState == ConnectionState.done &&
+          // snapshot.data == null) {
+          return MaterialApp(
+            title: 'Industry App',
+            theme: ThemeData(
+              scaffoldBackgroundColor: Colors.white,
+              primaryColor: kAppGreenColour,
+              fontFamily: "Muli",
+              appBarTheme: appBarTheme(),
+              textTheme: textTheme(),
+              inputDecorationTheme: inputDecorationTheme(),
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            debugShowCheckedModeBanner: false,
+            initialRoute: DashboardScreen.routeName,
+            routes: routes,
           );
-        } else {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.data == null) {
-
-            return MaterialApp(
-              title: 'Industry App',
-              theme: ThemeData(
-                scaffoldBackgroundColor: Colors.white,
-                primaryColor: kAppGreenColour,
-                fontFamily: "Muli",
-                appBarTheme: appBarTheme(),
-                textTheme: textTheme(),
-                inputDecorationTheme: inputDecorationTheme(),
-                visualDensity: VisualDensity.adaptivePlatformDensity,
-              ),
-              debugShowCheckedModeBanner: false,
-              initialRoute: SplashScreen.routeName,
-              routes: routes,
-            );
-          } else {
+          /*} else {
             return progressIndicator();
-          }
-        }
-      },
-    );
+          }*/
+        });
   }
 }

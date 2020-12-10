@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:industry_app/constants.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:industry_app/otp_screen.dart';
-import 'package:industry_app/size_config.dart';
-import 'package:device_info/device_info.dart';
 import 'package:intl/intl.dart';
 import 'package:industry_app/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -19,13 +17,17 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   TextEditingController _emailController = new TextEditingController();
   TextEditingController _nameController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
+  TextEditingController _confirmController = new TextEditingController();
   String date;
   String role;
   int _myActivity;
   final _formKey = GlobalKey<FormState>();
   DateTime dateOfBirth = DateTime.now();
-  Future<List<dynamic>> user_roles;
+  Future<List<dynamic>> userRoles;
   Future<dynamic> data;
+  bool obscure = true;
+  bool obscure1 = true;
 
   @override
   void initState() {
@@ -37,13 +39,14 @@ class _RegisterState extends State<Register> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
-
+    _passwordController.dispose();
+    _confirmController.dispose();
     super.dispose();
   }
 
   @override
   void didChangeDependencies() {
-    user_roles = _getRole();
+    userRoles = _getRole();
     data = _getDeviceData();
     super.didChangeDependencies();
   }
@@ -58,9 +61,9 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+
     final userdata = Provider.of<UserProvider>(context, listen: false);
     final deviceData = Provider.of<DeviceDataProvider>(context, listen: false);
-    final TargetPlatform platform = getDevicePlatform(context);
 
     return Scaffold(
       body: SafeArea(
@@ -70,7 +73,7 @@ class _RegisterState extends State<Register> {
             padding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.height * 0.02),
             child: FutureBuilder(
-              future: user_roles,
+              future: userRoles,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return SingleChildScrollView(
@@ -127,14 +130,12 @@ class _RegisterState extends State<Register> {
                                 onChanged: (value) {
                                   setState(() {
                                     _myActivity = value;
-
                                   });
                                 },
                                 validator: validateRole,
                                 onSaved: (value) {
                                   setState(() {
                                     _myActivity = value;
-
                                   });
                                 },
                               ),
@@ -142,6 +143,14 @@ class _RegisterState extends State<Register> {
                                   height: MediaQuery.of(context).size.height *
                                       0.04),
                               pickDate(context),
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.04),
+                              buildPasswordFormField(),
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.04),
+                              buildConfirmPasswordFormField(),
                               SizedBox(
                                   height: MediaQuery.of(context).size.height *
                                       0.04),
@@ -182,14 +191,15 @@ class _RegisterState extends State<Register> {
                                       print('${_emailController.text} email');
                                       print('${_nameController.text} name');
                                       print('${deviceData.deviceNumber} imei');
-
+                                      print('${_passwordController.text} password');
                                       var register =
                                           await userdata.registerUser(
                                               _emailController.text,
                                               _nameController.text,
                                               dateOfBirth.toString(),
                                               deviceData.deviceNumber,
-                                              _myActivity.toString());
+                                              _myActivity.toString(),
+                                          _passwordController.text);
 
                                       Navigator.pushNamed(
                                           context, OTPScreen.routeName);
@@ -201,7 +211,7 @@ class _RegisterState extends State<Register> {
                                   height: MediaQuery.of(context).size.height *
                                       0.04),
                               Text(
-                                'By registering you are agreeining to our terms and conditions',
+                                'By registering you are agreeing to our terms and conditions',
                                 style: Theme.of(context).textTheme.caption,
                                 textAlign: TextAlign.center,
                               ),
@@ -247,6 +257,84 @@ class _RegisterState extends State<Register> {
     );
   }
 
+  TextFormField buildPasswordFormField() {
+
+    return TextFormField(
+      obscureText: obscure,
+      controller: _passwordController,
+      validator: validatePassword,
+      decoration: InputDecoration(
+        labelText: "Password",
+        hintText: "Please enter your password",
+        hintStyle: TextStyle(color: Colors.grey),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        prefixIcon: Icon(Icons.shield),
+        suffixIcon: IconButton(
+          icon: Icon(Icons.remove_red_eye),
+          onPressed: () {
+            if (obscure) {
+              setState(() {
+                obscure = false;
+              });
+            } else {
+              setState(() {
+                obscure = true;
+              });
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  TextFormField buildConfirmPasswordFormField() {
+    return TextFormField(
+      obscureText: obscure1,
+      controller: _confirmController,
+      validator: validateConfirmPassword ,
+      decoration: InputDecoration(
+        labelText: "Confirm password",
+        hintText: "Please confirm password",
+        hintStyle: TextStyle(color: Colors.grey),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        prefixIcon: Icon(Icons.shield),
+        suffixIcon: IconButton(
+          icon: Icon(Icons.remove_red_eye),
+          onPressed: () {
+            setState(() {
+              if (obscure1) {
+                obscure1 = false;
+                print(obscure1);
+              } else if (obscure1 == false) {
+                obscure1 = true;
+                print(obscure1);
+              }
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  String validatePassword(String value) {
+    if (value == '') {
+      return 'Password cannot be empty';
+    } else if (value != _confirmController.text) {
+      return 'Passwords do not match';
+    } else {
+      return null;
+    }
+  }
+
+  String validateConfirmPassword(String value) {
+    if (value == '') {
+      return 'Password cannot be empty';
+    } else if (value != _passwordController.text) {
+      return 'Passwords do not match';
+    } else {
+      return null;
+    }
+  }
   TextFormField buildNameFormField() {
     return TextFormField(
       keyboardType: TextInputType.text,
@@ -261,7 +349,6 @@ class _RegisterState extends State<Register> {
       validator: validateName,
     );
   }
-
   Widget buildDropDown(AsyncSnapshot<dynamic> snapshot) {
     return DropDownFormField(
       filled: false,
@@ -284,7 +371,6 @@ class _RegisterState extends State<Register> {
       },
     );
   }
-
   GestureDetector pickDate(BuildContext context) {
     final TargetPlatform platform = getDevicePlatform(context);
     return GestureDetector(

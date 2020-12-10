@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rich_alert/rich_alert.dart';
+
 const kApiUrl = 'http://api.freshmark/';
 const Map<String, String> kPostHeaders = {"Accept": "application/json"};
 
@@ -64,10 +65,13 @@ OutlineInputBorder outlineInputBorder() {
     borderSide: BorderSide(color: kTextColor),
   );
 }
+
 OutlineInputBorder errorInputBorder() {
   return OutlineInputBorder(
     borderRadius: BorderRadius.circular(28.0),
-    borderSide: BorderSide(color: Colors.red,),
+    borderSide: BorderSide(
+      color: Colors.red,
+    ),
   );
 }
 
@@ -99,19 +103,21 @@ InputDecorationTheme inputDecorationTheme() {
     gapPadding: 10,
   );
   return InputDecorationTheme(
-      contentPadding: EdgeInsets.symmetric(horizontal: 42, vertical: 20),
-      enabledBorder: outlineInputBorder,
-      focusedBorder: outlineInputBorder,
-      errorBorder: errorInputBorder(),
-      border: outlineInputBorder);
+    contentPadding: EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+    enabledBorder: outlineInputBorder,
+    focusedBorder: outlineInputBorder,
+    errorBorder: errorInputBorder(),
+    border: outlineInputBorder,
+  );
 }
+
 TargetPlatform getDevicePlatform(BuildContext context) {
   final ThemeData themeData = Theme.of(context);
   assert(themeData.platform != null);
   return themeData.platform;
 }
 
-Widget progressIndicator(){
+Widget progressIndicator() {
   return Container(
     color: Colors.white,
     child: Center(
@@ -123,15 +129,21 @@ Widget progressIndicator(){
   );
 }
 
-void androidAlertDialog(
-    BuildContext context, String bodyText,
-    {String titleText, onYesPressed(),onNoPressed()}) {
+void androidAlertDialog(BuildContext context, String bodyText,
+    {String titleText, onYesPressed(), onNoPressed()}) {
   showDialog(
     useSafeArea: true,
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: titleText != null ? Text(titleText) : Text(''),
+        title: titleText != null
+            ? Text(
+                titleText,
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              )
+            : Text(''),
         content: Text(bodyText),
         actions: <Widget>[
           FlatButton(
@@ -143,14 +155,14 @@ void androidAlertDialog(
                 style: TextStyle(
                   fontFamily: 'Muli',
                   fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                  fontSize: 20,
+                  color: Colors.red,
+                  fontSize: 15,
                 ),
               ),
             ),
-            color: kAppGreenColour,
+            //color: kAppGreenColour,
             /*shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0)),*/
+                borderRadius: BorderRadius.circular(12.0),),*/
           ),
           FlatButton(
             onPressed: onNoPressed,
@@ -161,12 +173,12 @@ void androidAlertDialog(
                 style: TextStyle(
                   fontFamily: 'Muli',
                   fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                  fontSize: 20,
+                  color: kAppGreenColour,
+                  fontSize: 15,
                 ),
               ),
             ),
-            color: kAppGreenColour,
+            //color: kAppGreenColour,
             /*shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),*/
           ),

@@ -8,10 +8,10 @@ import 'package:http/http.dart' as http;
 class DeviceData {
   final int id;
   final String deviceNumber;
-  int active;
+  String active;
   String email;
   String name;
-  int role;
+  String role;
   String role_desc;
 
   DeviceData(
@@ -38,6 +38,7 @@ class DeviceDataProvider with ChangeNotifier {
       AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
       _deviceNumber = androidDeviceInfo.androidId;
     }
+    print(_deviceNumber);
     Map<String, String> body = {"device_imei": _deviceNumber};
 
     http.Response deviceDataResponse = await http.post(

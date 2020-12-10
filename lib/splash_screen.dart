@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:industry_app/login_screen.dart';
 import 'package:industry_app/register.dart';
 import 'package:industry_app/constants.dart';
 import 'package:industry_app/size_config.dart';
@@ -42,16 +43,6 @@ class _BodyState extends State<Body> {
                 itemBuilder: (context, index) => Column(
                   children: [
                     Spacer(),
-                    /*Text(
-                      "Welcome",
-                      style: TextStyle(
-                        fontSize:
-                            ((36 / 375.0) * MediaQuery.of(context).size.width),
-                        color: kAppGreenColour,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),*/
                     Spacer(flex: 1),
                     Image.asset(
                       "images/logo.png",
@@ -80,28 +71,57 @@ class _BodyState extends State<Body> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.7,
                       height: MediaQuery.of(context).size.height * 0.05,
-                      child: FlatButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        color: kAppGreenColour,
-                        child: Center(
-                          child: Text(
-                            "Sign up",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.055,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
+                            color: kAppGreenColour,
+                            child: Center(
+                              child: Text(
+                                "Sign up",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize:
+                                      MediaQuery.of(context).size.width * 0.055,
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                Register.routeName,
+                              );
+                            },
                           ),
-                        ),
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(
-                            context,
-                            Register.routeName,
-                          );
-                        },
+                          Spacer(),
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            color: kAppGreenColour,
+                            child: Center(
+                              child: Text(
+                                "Sign in",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize:
+                                  MediaQuery.of(context).size.width * 0.055,
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                Login.routeName,
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(
@@ -113,7 +133,7 @@ class _BodyState extends State<Body> {
                         Text("Powered by: "),
                         Image.asset(
                           "images/newlogo.png",
-                          height: MediaQuery.of(context).size.height * 0.07,
+                          height: MediaQuery.of(context).size.height * 0.04,
                           width: MediaQuery.of(context).size.width * 0.5,
                         ),
                       ],

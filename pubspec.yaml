@@ -39,6 +39,8 @@ dependencies:
   rich_alert: ^0.1.32
   otp_text_field: ^1.0.1
   url_launcher: ^5.7.10
+  toggle_switch: ^0.1.8
+  shared_preferences: ^0.5.12+4
 
 dev_dependencies:
   flutter_test:

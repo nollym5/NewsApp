@@ -7,7 +7,7 @@ import 'package:industry_app/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:industry_app/user_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:otp_text_field/otp_text_field.dart';
@@ -60,66 +60,84 @@ class _OTPScreenState extends State<OTPScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.05),
+                          height: MediaQuery.of(context).size.height * 0.03),
                       Text(
-                        'OTP Verification',
+                        'Verification',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: kAppGreenColour,
-                            height: 1.5,
-
-                            fontSize: MediaQuery.of(context).size.width * 0.08,),
+                          fontWeight: FontWeight.bold,
+                          color: kAppGreenColour,
+                          height: 1.5,
+                          fontSize: MediaQuery.of(context).size.width * 0.08,
+                        ),
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.03),
+                      Center(
+                        child: Text('Enter A 6 Digit Number That Was Sent To'),
                       ),
                       Center(
-                          widthFactor: MediaQuery.of(context).size.width,
-                          child: Text('We sent your code to \n ${email}')),
+                        child: Text(email),
+                      ),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.08),
+                          height: MediaQuery.of(context).size.height * 0.06),
                       Container(
                         //color: kAppRedColour,
                         // padding: EdgeInsets.all(
                         //    MediaQuery.of(context).size.width * 0.012),
-                        child: OTPTextField(
-                          //crossAxisAlignment: CrossAxisAlignment.center,
-                          //mainAxisAlignment: MainAxisAlignment.center,
-                          textFieldAlignment: MainAxisAlignment.spaceAround,
-                          keyboardType: TextInputType.number,
-                          fieldStyle: FieldStyle.box,
-                          /*borderRadius:
-                                BorderRadius.all(Radius.circular(9.0)),*/
-                          fieldWidth: 50,
-                          length: 6,
-                          width: MediaQuery.of(context).size.width,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
+                        child: OtpTextField(
+                          hasCustomInputDecoration: true,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 20),
+                            counterStyle: TextStyle(color: Colors.white),
+                            focusColor: kAppGreenColour,
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: BorderSide(
+                                  color: kAppGreenColour,
+                                ),
+                                gapPadding: 10),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(color: kAppGreenColour),
+                              gapPadding: 10,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(color: kAppGreenColour),
+                              gapPadding: 5,
+                            ),
                           ),
-                          //filled: false,
-                          //margin: const EdgeInsets.all(8.0),
-                          // showFieldAsBox: true,
-                          //borderColor: kAppGreenColour,
-                          //cursorColor: kAppGreenColour,
-                          //disabledBorderColor: kAppGreyColour,
-                          //enabledBorderColor: kAppGreenColour,
-                          //focusedBorderColor: kAppGreenColour,
-                          //autoFocus: true,
-                         // obscureText: false,
-                          /*textStyle: TextStyle(
-                              color: Colors.black,
-                              backgroundColor: Colors.black,
-                              fontWeight: FontWeight.w500,
-                            ),*/
-                          onChanged: (String code) {
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          keyboardType: TextInputType.number,
+                          borderRadius: BorderRadius.all(Radius.circular(9.0)),
+                          fieldWidth: MediaQuery.of(context).size.width * 0.121,
+                          numberOfFields: 6,
+                          borderWidth: 1.5,
+                          filled: false,
+                          margin: const EdgeInsets.all(8.0),
+                          showFieldAsBox: true,
+                          borderColor: kAppGreenColour,
+                          cursorColor: kAppGreenColour,
+                          enabledBorderColor: kAppGreenColour,
+                          focusedBorderColor: kAppGreenColour,
+                          autoFocus: true,
+                          obscureText: false,
+                          textStyle: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          onCodeChanged: (String code) {
                             print(code);
                           },
-                          onCompleted: (String code) async {
+                          onSubmit: (String code) async {
                             otpCode = code;
                             //Verify otp with one sent
                             var verified =
                                 await userData.verifyOTP(email, otpCode);
                             if (verified == "verified") {
-                              print(otpCode);
-                              Fluttertoast.showToast(
+                              /*Fluttertoast.showToast(
                                   msg: "You have successfully registered!",
                                   toastLength: Toast.LENGTH_LONG,
                                   gravity: ToastGravity.BOTTOM,
@@ -128,16 +146,17 @@ class _OTPScreenState extends State<OTPScreen> {
                                   textColor: Colors.white,
                                   fontSize: 16.0);
                               Navigator.pushReplacementNamed(
-                                  context, DashboardScreen.routeName);
+                                  context, DashboardScreen.routeName);*/
                             } else {
-                              Fluttertoast.showToast(
+                              //var resend = await ;
+                              /* Fluttertoast.showToast(
                                   msg: "WRONG, we have resent your otp",
                                   toastLength: Toast.LENGTH_LONG,
                                   gravity: ToastGravity.BOTTOM,
                                   timeInSecForIosWeb: 3,
                                   backgroundColor: kAppGreyColour,
                                   textColor: Colors.white,
-                                  fontSize: 16.0);
+                                  fontSize: 16.0);*/
                             }
                           },
                         ),
